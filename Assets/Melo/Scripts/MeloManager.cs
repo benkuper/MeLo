@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using UnityEngine;
 using DG.Tweening;
 using OSCQuery.UnityOSC;
-using static UnityEditor.Progress;
 
 [System.Serializable]
 public class MeloType
