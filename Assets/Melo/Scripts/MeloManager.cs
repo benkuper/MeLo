@@ -27,7 +27,7 @@ public class MeloManager : MonoBehaviour
     [Range(0f, 1f)]
     public float opacityMultiplier = 1;
 
-    [Range(0f,10f)]
+    [Range(0f, 10f)]
     public float animHDRMultiplier = 5;
 
 
@@ -62,7 +62,7 @@ public class MeloManager : MonoBehaviour
         }
     }
 
-    public void addLog(string id, string text, string type, int value)
+    public void addLog(string id, string text, string type, int value = -1)
     {
         MeloItem item = getItemWithId(id);
 
@@ -70,7 +70,11 @@ public class MeloManager : MonoBehaviour
         {
             item = Instantiate(itemPrefab).GetComponent<MeloItem>();
             MeloType t = getTypeForString(type);
-            Debug.Log(item);
+            if (t == null)
+            {
+                Debug.Log("Type not foud : " + type);
+            }
+
 
             Color col = t.color;
             col.a *= opacityMultiplier;
@@ -111,7 +115,7 @@ public class MeloManager : MonoBehaviour
     void itemDestroyed(MeloItem item)
     {
         cleaningAnimCount++;
-        
+
 
         item.fade(0, .5f);
         item.transform.DOKill();
@@ -121,7 +125,7 @@ public class MeloManager : MonoBehaviour
             Destroy(item.gameObject);
             items.Remove(item);
             cleaningAnimCount--;
-            if(cleaningAnimCount == 0) placeItems(); 
+            if (cleaningAnimCount == 0) placeItems();
         });
     }
 
@@ -152,9 +156,9 @@ public class MeloManager : MonoBehaviour
     {
         if (msg.Address == "/log")
         {
-            if (msg.Data.Count >= 4)
+            if (msg.Data.Count >= 3)
             {
-                addLog(msg.Data[0].ToString(), msg.Data[1].ToString(), msg.Data[2].ToString(), (int)msg.Data[3]);
+                addLog(msg.Data[0].ToString(), msg.Data[1].ToString(), msg.Data[2].ToString(), msg.Data.Count >= 4 ? (int)msg.Data[3] : -1);
             }
         }
     }

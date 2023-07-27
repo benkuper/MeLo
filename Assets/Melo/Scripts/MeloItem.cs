@@ -59,14 +59,18 @@ public class MeloItem : MonoBehaviour
         this.color = color;
         this.life = life;
 
-        this.animObject = Instantiate(prefab).GetComponent<AnimController>();
-        this.animObject.transform.SetParent(transform.Find("Anim"), false);
-        this.animObject.setColor(color * animHDRMultiplier);
-        this.animObject.setValue(value);
+        if(prefab != null)
+        {
+            this.animObject = Instantiate(prefab).GetComponent<AnimController>();
+            this.animObject.transform.SetParent(transform.Find("Anim"), false);
+            this.animObject.setColor(color * animHDRMultiplier);
+            this.animObject.setValue(value);
+        }
+        
         panelMat.SetColor("_Color",color);
 
         labelTM.text = itemName;
-
+        valueTM.gameObject.SetActive(value >= 0);
 
         fade(0, 0);
         fade(1, 1);
@@ -93,6 +97,11 @@ public class MeloItem : MonoBehaviour
             valueTM.DOFade(value, time);
         }
 
+        if(this.animObject != null)
+        {
+            this.animObject.fade(value, time);
+        }
+
     }
 
 
@@ -100,7 +109,10 @@ public class MeloItem : MonoBehaviour
     {
         timeAtSpawn = Time.time;
         this.value = value;
-        valueTM.text = (value * 100 / 127).ToString() + "%";
-        this.animObject.setValue(value / 127.0f);
+
+        if (value >= 0) valueTM.text = (value * 100 / 127).ToString() + "%";
+        else valueTM.text = "";
+
+        if(this.animObject != null) this.animObject.setValue(value / 127.0f);
     }
 }
